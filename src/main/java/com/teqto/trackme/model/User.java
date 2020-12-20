@@ -22,6 +22,7 @@ import org.springframework.stereotype.Repository;
 @Table(name="user")
 @NamedQueries({ @NamedQuery(name = "User.findAll", query = "SELECT u FROM User u"),
 	@NamedQuery(name = "User.validatePwd", query = "SELECT u FROM User u WHERE u.phone = :phone and u.password = :password"),
+	@NamedQuery(name = "User.findByDeviceid", query = "SELECT u FROM User u WHERE u.deviceid = :deviceid and u.active = true"),
 	@NamedQuery(name = "User.forgetPwd", query = "UPDATE User u SET u.password= :password WHERE u.phone= :phone"),
 	@NamedQuery(name = "User.activateUser", query = "UPDATE User u SET u.active= :active WHERE u.phone= :phone"), })
 

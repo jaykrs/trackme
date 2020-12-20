@@ -12,8 +12,18 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
 
-@Entity(name="group")
+import org.springframework.stereotype.Repository;
+
+@Entity
+@Repository
+@Table(name="groups")
+@NamedQueries({ @NamedQuery(name = "Group.findAll", query = "SELECT g FROM Group g"),
+	@NamedQuery(name = "Group.findByOwnerid", query = "SELECT g FROM Group g WHERE g.ownerid = :ownerid")
+ })
 public class Group implements Serializable {
 
     /**
@@ -28,7 +38,7 @@ public class Group implements Serializable {
     @Column(nullable=false, length=50)
     private String name;
     @Column(nullable=false, precision=10)
-    private int owner;
+    private int ownerid;
     @Column(length=20)
     private String phone;
     private LocalDate createdon;
@@ -81,8 +91,8 @@ public class Group implements Serializable {
      *
      * @return the current value of owner
      */
-    public int getOwner() {
-        return owner;
+    public int getOwnerid() {
+        return ownerid;
     }
 
     /**
@@ -90,8 +100,8 @@ public class Group implements Serializable {
      *
      * @param aOwner the new value for owner
      */
-    public void setOwner(int aOwner) {
-        owner = aOwner;
+    public void setOwnerid(int aOwner) {
+        ownerid = aOwner;
     }
 
     /**

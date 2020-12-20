@@ -13,7 +13,7 @@ import com.teqto.trackme.model.User;
  * @author jayant
  *
  */
-public interface UsersRepository extends JpaRepository<User, Long>{
+public interface UsersRepository extends JpaRepository<User, Integer>{
 	User findByEmail(String emailId);
 	User findByPhone(String phone);
 	Optional<User> findByDeviceid(String deviceid);

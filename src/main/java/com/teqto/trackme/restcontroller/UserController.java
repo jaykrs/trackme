@@ -60,7 +60,7 @@ public class UserController {
 	 * @return
 	 */
 	@GetMapping("/get/{id}")
-	ResponseEntity<?> getUsersById(@PathVariable Long id) {
+	ResponseEntity<?> getUsersById(@PathVariable Integer id) {
 		Optional<User> users = usersRepository.findById(id);
 		log.info("found user with id" + id);
 		users.get().setPassword("***");

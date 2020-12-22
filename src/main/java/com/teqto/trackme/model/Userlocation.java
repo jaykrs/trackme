@@ -12,8 +12,19 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
 
-@Entity(name="userlocation")
+import org.springframework.stereotype.Repository;
+
+@Entity
+@Repository
+@Table(name="userlocation")
+@NamedQueries({ @NamedQuery(name = "Userlocation.findAll", query = "SELECT ul FROM Userlocation ul"),
+	@NamedQuery(name = "Userlocation.findByDateAndUserid", query = "SELECT ul FROM Userlocation ul WHERE ul.createdon = :createdon and ul.userid = :userid"),
+	@NamedQuery(name = "Userlocation.findByUserid", query = "SELECT ul FROM Userlocation ul WHERE ul.userid = :userid ORDER BY ul.id DESC")
+ })
 public class Userlocation implements Serializable {
 
     /**
@@ -25,7 +36,7 @@ public class Userlocation implements Serializable {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(unique=true, nullable=false, precision=19)
-    private long id;
+    private int id;
     @Column(nullable=false, precision=10)
     private int userid;
     @Column(nullable=false, length=20)
@@ -47,7 +58,7 @@ public class Userlocation implements Serializable {
      *
      * @return the current value of id
      */
-    public long getId() {
+    public int getId() {
         return id;
     }
 
@@ -56,7 +67,7 @@ public class Userlocation implements Serializable {
      *
      * @param aId the new value for id
      */
-    public void setId(long aId) {
+    public void setId(int aId) {
         id = aId;
     }
 

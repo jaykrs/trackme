@@ -12,8 +12,21 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
 
-@Entity(name="usergroup")
+import org.springframework.stereotype.Repository;
+
+@Entity
+@Repository
+@Table(name="usergroup")
+@NamedQueries({ @NamedQuery(name = "Usergroup.findAll", query = "SELECT ug FROM Usergroup ug"),
+	@NamedQuery(name = "Usergroup.findByOwnerid", query = "SELECT ug FROM Usergroup ug WHERE ug.userid = :ownerid and ug.owner = true"),
+	@NamedQuery(name = "Usergroup.findByUserid", query = "SELECT ug FROM Usergroup ug WHERE ug.userid = :userid and ug.approved = true"),
+	@NamedQuery(name = "Usergroup.findByUserAndGroup", query = "SELECT ug FROM Usergroup ug WHERE ug.groupid = :groupid and ug.userid = :userid and ug.owner = false and ug.approved = false"),
+	@NamedQuery(name = "Usergroup.findByGroupOnwerAndUser", query = "SELECT ug FROM Usergroup ug WHERE ug.groupid = :groupid and ug.userid = :userid and ug.owner = true")
+ })
 public class Usergroup implements Serializable {
 
     /**
@@ -24,7 +37,7 @@ public class Usergroup implements Serializable {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(unique=true, nullable=false, precision=19)
-    private long id;
+    private int id;
     @Column(nullable=false, precision=10)
     private int userid;
     @Column(nullable=false, precision=10)
@@ -36,6 +49,8 @@ public class Usergroup implements Serializable {
     private int createdby;
     @Column(precision=10)
     private int approvedby;
+    @Column(length=1)
+    private boolean owner;
 
     /** Default constructor. */
     public Usergroup() {
@@ -47,7 +62,7 @@ public class Usergroup implements Serializable {
      *
      * @return the current value of id
      */
-    public long getId() {
+    public int getId() {
         return id;
     }
 
@@ -56,7 +71,7 @@ public class Usergroup implements Serializable {
      *
      * @param aId the new value for id
      */
-    public void setId(long aId) {
+    public void setId(int aId) {
         id = aId;
     }
 
@@ -237,5 +252,27 @@ public class Usergroup implements Serializable {
         ret.put("id", Long.valueOf(getId()));
         return ret;
     }
+
+	/**
+	 * @return the owner
+	 */
+	public boolean isOwner() {
+		return owner;
+	}
+
+	/**
+	 * @param owner the owner to set
+	 */
+	public void setOwner(boolean owner) {
+		this.owner = owner;
+	}
+
+	public Usergroup(int userid, int groupid, LocalDate createdon, int createdby) {
+		super();
+		this.userid = userid;
+		this.groupid = groupid;
+		this.createdon = createdon;
+		this.createdby = createdby;
+	}
 
 }

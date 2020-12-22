@@ -35,7 +35,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.teqto.trackme.constants.ServiceConstants;
 import com.teqto.trackme.model.Group;
 import com.teqto.trackme.model.User;
+import com.teqto.trackme.model.Usergroup;
 import com.teqto.trackme.repository.GroupRepository;
+import com.teqto.trackme.repository.UserGroupRepository;
 import com.teqto.trackme.repository.UsersRepository;
 
 
@@ -51,6 +53,8 @@ public class GroupController {
 	private final Logger log = LoggerFactory.getLogger(GroupController.class);
 	@Autowired
 	private GroupRepository groupRepository;
+	@Autowired
+	private UserGroupRepository userGroupRepository;
 	@Autowired
 	private UsersRepository usersRepository;
 //	@Autowired
@@ -115,6 +119,11 @@ public class GroupController {
 			group.setPhone(owner.get().getContact());
 			group.setCreatedon(LocalDate.now());
 			result = groupRepository.saveAndFlush(group);
+			Usergroup ug = new Usergroup(result.getOwnerid(),result.getId(),LocalDate.now(),result.getOwnerid());
+			ug.setOwner(Boolean.TRUE);
+			ug.setApprovedby(result.getOwnerid());
+			ug.setApproved(Boolean.TRUE);
+			userGroupRepository.saveAndFlush(ug);
 			return ResponseEntity.created(new URI("/api/group/create/" + result.getId())).body(result);
 		}
 		return ResponseEntity.unprocessableEntity().body(group.getName() + ServiceConstants.GROUPEXISTS);

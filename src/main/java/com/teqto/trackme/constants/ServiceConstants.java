@@ -53,4 +53,5 @@ public class ServiceConstants {
 	
 	public static final String GROUPNAME = "groupName";
 	public static final String GROUPEXISTS = "Group already created by the same users, A user can create only one group";
+	public static final String USERGROUPEXISTS = " ALREADY EXIST";
 }

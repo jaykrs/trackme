@@ -28,13 +28,13 @@ CREATE TABLE `groups` (
   `createdon` date DEFAULT NULL,
   `avatar` varchar(200) COLLATE utf8_bin DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 /*Data for the table `groups` */
 
 insert  into `groups`(`id`,`name`,`ownerid`,`phone`,`createdon`,`avatar`) values 
-(1,'my family(jayant K-9716529094)',1,'9716529094','2020-12-21',NULL),
-(2,'CUG(jaya kumar-9551002918)',2,'9551002918','2020-12-21',NULL);
+(3,'my Family Si(jayant K-9716529094)',1,'9716529094','2020-12-22',NULL),
+(4,'Tq System Employee(Avinash Kumar-9121212121)',3,'9121212121','2020-12-23',NULL);
 
 /*Table structure for table `notification` */
 
@@ -75,13 +75,14 @@ CREATE TABLE `user` (
   `avatar` varchar(200) COLLATE utf8_bin DEFAULT NULL,
   `logindate` date DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 /*Data for the table `user` */
 
 insert  into `user`(`id`,`email`,`phone`,`password`,`name`,`active`,`deleted`,`otp`,`gender`,`dob`,`createdon`,`city`,`country`,`contact`,`deviceid`,`devicename`,`avatar`,`logindate`) values 
 (1,NULL,'9716529094','Welcome@0','jayant K','\0','\0','ec3d0d',NULL,NULL,'2020-12-20',NULL,NULL,'9716529094','3213-34243-23455-3321','Moto',NULL,NULL),
-(2,NULL,'9551002918','Welcome@0','jaya kumar','','\0','20ce09',NULL,NULL,'2020-12-21',NULL,'India','9551002918','3213-4534-4563-1234','Samsung',NULL,NULL);
+(2,NULL,'9551002918','Welcome@0','jaya kumar','','\0','20ce09',NULL,NULL,'2020-12-21',NULL,'India','9551002918','3213-4534-4563-1234','Samsung',NULL,NULL),
+(3,NULL,'9121212121','Welcome@0','Avinash Kumar','','\0','ef44ee',NULL,NULL,'2020-12-23',NULL,NULL,'9121212121','r4312-4567-2234-3214','Samsung A20',NULL,NULL);
 
 /*Table structure for table `usergroup` */
 
@@ -95,10 +96,17 @@ CREATE TABLE `usergroup` (
   `createdon` date DEFAULT NULL,
   `createdby` int(10) NOT NULL,
   `approvedby` int(10) DEFAULT NULL,
+  `owner` bit(1) NOT NULL DEFAULT b'0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 /*Data for the table `usergroup` */
+
+insert  into `usergroup`(`id`,`userid`,`groupid`,`approved`,`createdon`,`createdby`,`approvedby`,`owner`) values 
+(1,1,3,'','2020-12-22',1,1,''),
+(2,2,3,'','2020-12-22',2,1,'\0'),
+(3,3,3,'','2020-12-23',3,1,'\0'),
+(4,3,4,'','2020-12-23',3,3,'');
 
 /*Table structure for table `userlocation` */
 
@@ -110,11 +118,17 @@ CREATE TABLE `userlocation` (
   `latitude` varchar(20) COLLATE utf8_bin NOT NULL,
   `longitude` varchar(20) COLLATE utf8_bin NOT NULL,
   `createdon` datetime NOT NULL,
-  `deviceid` varchar(20) COLLATE utf8_bin NOT NULL,
+  `deviceid` varchar(200) COLLATE utf8_bin NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 /*Data for the table `userlocation` */
+
+insert  into `userlocation`(`id`,`userid`,`latitude`,`longitude`,`createdon`,`deviceid`) values 
+(1,1,'25.5805','85.1278','2020-12-23 00:22:48','3213-34243-23455-3321'),
+(2,1,'25.5804','85.1278','2020-12-23 00:23:23','3213-34243-23455-3321'),
+(3,1,'25.5804','85.1275','2020-12-23 00:23:45','3213-34243-23455-3321'),
+(4,3,'12.9716 N','77.5946 E','2020-12-23 21:34:18','r4312-4567-2234-3214');
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;

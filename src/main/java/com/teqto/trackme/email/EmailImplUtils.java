@@ -13,6 +13,10 @@ import com.mailjet.client.errors.MailjetException;
 import com.mailjet.client.errors.MailjetSocketTimeoutException;
 import com.mailjet.client.ClientOptions;
 import com.mailjet.client.resource.Emailv31;
+import com.mashape.unirest.http.HttpResponse;
+import com.mashape.unirest.http.Unirest;
+import com.mashape.unirest.http.exceptions.UnirestException;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 @Component
@@ -73,4 +77,15 @@ public class EmailImplUtils implements EmailInterface{
 		return false;
 	}
 
+	@Override
+	public void sendOtpMessage(String phone, String content)  {
+		try {
+		HttpResponse response = Unirest.post("https://www.fast2sms.com/dev/bulk")
+				  .header("authorization", "AUTH_CODE")
+				  .header("cache-control", "no-cache")
+				  .header("content-type", "application/x-www-form-urlencoded")
+				  .body("sender_id=FSTSMS&language=english&route=qt&numbers="+phone+"&message=42068&variables={#AA#}&variables_values="+content)
+				  .asString();
+	}catch(UnirestException ue) {}
+	}
 }

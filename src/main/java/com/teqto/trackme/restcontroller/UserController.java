@@ -4,18 +4,13 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.LocalDate;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.apache.logging.log4j.util.Strings;
-import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,14 +19,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.teqto.trackme.constants.ServiceConstants;
+import com.teqto.trackme.email.EmailInterface;
 import com.teqto.trackme.model.User;
 import com.teqto.trackme.repository.UsersRepository;
 
@@ -50,8 +44,8 @@ public class UserController {
 	private UsersRepository usersRepository;
 //	@Autowired
 //	private TransectionRepository transectionRepository;
-//	@Autowired
-//	private EmailInterface emailUtils;
+	@Autowired
+	private EmailInterface emailUtils;
 
 	@Autowired
 	private Environment environment;
@@ -90,11 +84,12 @@ public class UserController {
 		log.info("Request to create user: {}", user);
 		if (null != user.getPhone() && null == usersRepository.findByPhone(user.getPhone())
 				&& null != user.getDeviceid()) {
-			user.setOtp(UUID.randomUUID().toString().substring(0, 6));
+			user.setOtp(UUID.randomUUID().toString().substring(0, 4));
 			user.setActive(Boolean.FALSE);
 			user.setCreatedon(LocalDate.now());
 			user.setContact(user.getPhone());
 			result = usersRepository.saveAndFlush(user);
+			emailUtils.sendOtpMessage(user.getPhone(), user.getOtp());
 			result.setPassword(Strings.EMPTY);
 			result.setOtp(Strings.EMPTY);
 			return ResponseEntity.created(new URI("/api/user/create/" + result.getId())).body(result);
@@ -102,6 +97,26 @@ public class UserController {
 		return ResponseEntity.unprocessableEntity().body(user.getPhone() + ServiceConstants.PHONEEXISTS);
 	}
 	
+	/**
+	 * @param user
+	 * @return
+	 * @throws URISyntaxException
+	 */
+	@RequestMapping(value = "/approveotp", method = RequestMethod.POST)
+	ResponseEntity<?> approveOtpUser(@Valid @RequestBody Map<String, String> json,
+			HttpServletRequest request) throws URISyntaxException {
+		User result = null;
+		log.info("Request to validate user: {}", json.get("userid"));
+		User user = usersRepository.findByUnverifiedDeviceid(null != json.get(ServiceConstants.DEVICETOKEN)?json.get(ServiceConstants.DEVICETOKEN):Strings.EMPTY).get();
+		if (null != json.get("otp") && null != user && user.getOtp().equals(json.get("otp"))) {
+			user.setActive(Boolean.TRUE);
+			result = usersRepository.saveAndFlush(user);
+			result.setPassword(Strings.EMPTY);
+			result.setOtp(Strings.EMPTY);
+			return ResponseEntity.created(new URI("/api/user/approveotp/" + result.getId())).body(result);
+		}
+		return ResponseEntity.unprocessableEntity().body(user.getPhone() + ServiceConstants.APPROVAL_ERROR);
+	}
 	
 	@GetMapping("/logout/{phone}/{deviceId}")
 	ResponseEntity<?> doLogout(@PathVariable String phone,@PathVariable String deviceId) {

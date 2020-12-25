@@ -17,6 +17,7 @@ public interface UsersRepository extends JpaRepository<User, Integer>{
 	User findByEmail(String emailId);
 	User findByPhone(String phone);
 	Optional<User> findByDeviceid(String deviceid);
+	Optional<User> findByUnverifiedDeviceid(String deviceid);
 	User validatePwd(@Param("phone") String emailId,@Param("password") String password);
 	@Transactional
 	@Modifying

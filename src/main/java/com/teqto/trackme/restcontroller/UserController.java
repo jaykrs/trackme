@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -49,6 +50,8 @@ public class UserController {
 
 	@Autowired
 	private Environment environment;
+	@Autowired
+	BCryptPasswordEncoder bCryptPasswordEncoder;
 	/**
 	 * @param id
 	 * @return
@@ -85,6 +88,7 @@ public class UserController {
 		if (null != user.getPhone() && null == usersRepository.findByPhone(user.getPhone())
 				&& null != user.getDeviceid()) {
 			user.setOtp(UUID.randomUUID().toString().substring(0, 4));
+			user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
 			user.setActive(Boolean.FALSE);
 			user.setCreatedon(LocalDate.now());
 			user.setContact(user.getPhone());

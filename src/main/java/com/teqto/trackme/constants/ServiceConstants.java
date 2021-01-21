@@ -51,6 +51,7 @@ public class ServiceConstants {
 	public static final long PLAN_EXTENSION_DAYS = 365;
 	public static final String PHONEEXISTS = " is already registered User , please login or reset password if forgotten";
 	public static final String APPROVAL_ERROR = "Some issue in validation, Please resend OTP or contact support";
+	public static final String RESENT_OTP_ERROR = "Some issue in sending otp, Please contact us for support";
 	public static final String GROUPNAME = "groupName";
 	public static final String GROUPEXISTS = "Group already created by the same users, A user can create only one group";
 	public static final String USERGROUPEXISTS = " ALREADY EXIST";

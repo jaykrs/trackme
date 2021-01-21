@@ -101,6 +101,22 @@ public class UserController {
 		return ResponseEntity.unprocessableEntity().body(user.getPhone() + ServiceConstants.PHONEEXISTS);
 	}
 	
+	@RequestMapping(value = "/update", method = RequestMethod.PUT)
+	ResponseEntity<?> updateUser(@Valid @RequestBody User user,
+			HttpServletRequest request) throws URISyntaxException {
+		User result = null;
+		log.info("Request to create user: {}", user);
+		if (null != user.getPhone() && null == usersRepository.findByPhone(user.getPhone())
+				&& null != user.getDeviceid()) {
+			user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+			result = usersRepository.saveAndFlush(user);
+			result.setPassword(Strings.EMPTY);
+			result.setOtp(Strings.EMPTY);
+			return ResponseEntity.created(new URI("/api/user/update/" + result.getId())).body(result);
+		}
+		return ResponseEntity.unprocessableEntity().body(user.getPhone() + ServiceConstants.PHONEEXISTS);
+	}
+	
 	/**
 	 * @param user
 	 * @return
@@ -120,6 +136,49 @@ public class UserController {
 			return ResponseEntity.created(new URI("/api/user/approveotp/" + result.getId())).body(result);
 		}
 		return ResponseEntity.unprocessableEntity().body(user.getPhone() + ServiceConstants.APPROVAL_ERROR);
+	}
+	
+	
+	/**
+	 * @param user
+	 * @return
+	 * @throws URISyntaxException
+	 */
+	@RequestMapping(value = "/resentotp", method = RequestMethod.POST)
+	ResponseEntity<?> resentOtptoUser(@Valid @RequestBody Map<String, String> json,
+			HttpServletRequest request) throws URISyntaxException {
+		User result = null;
+		log.info("Request to validate user: {}", json.get("userid"));
+		User user = usersRepository.findByUnverifiedDeviceid(null != json.get(ServiceConstants.DEVICETOKEN)?json.get(ServiceConstants.DEVICETOKEN):Strings.EMPTY).get();
+		if (null != user && !user.isActive()) {
+			result = user;
+			emailUtils.sendOtpMessage(user.getPhone(), user.getOtp());
+			result.setPassword(Strings.EMPTY);
+			result.setOtp(Strings.EMPTY);
+			return ResponseEntity.created(new URI("/api/user/resentotp/" + result.getId())).body(result);
+		}
+		return ResponseEntity.unprocessableEntity().body(user.getPhone() + ServiceConstants.RESENT_OTP_ERROR);
+	}
+	
+	/**
+	 * @param user
+	 * @return
+	 * @throws URISyntaxException
+	 */
+	@RequestMapping(value = "/forgetpwd", method = RequestMethod.POST)
+	ResponseEntity<?> forgetpwd(@Valid @RequestBody Map<String, String> json,
+			HttpServletRequest request) throws URISyntaxException {
+		User result = null;
+		log.info("Request to validate user: {}", json.get("userid"));
+		User user = usersRepository.findByUnverifiedDeviceid(null != json.get(ServiceConstants.DEVICETOKEN)?json.get(ServiceConstants.DEVICETOKEN):Strings.EMPTY).get();
+		if (null != user && user.isActive() && json.get("otp").equals(user.getOtp()) && null != json.get("password")) {
+			user.setPassword(bCryptPasswordEncoder.encode(json.get("password")));
+			result = usersRepository.saveAndFlush(user);
+			result.setPassword(Strings.EMPTY);
+			result.setOtp(Strings.EMPTY);
+			return ResponseEntity.created(new URI("/api/user/forgetpwd/" + result.getId())).body(result);
+		}
+		return ResponseEntity.unprocessableEntity().body(user.getPhone() + ServiceConstants.RESENT_OTP_ERROR);
 	}
 	
 	@GetMapping("/logout/{phone}/{deviceId}")

@@ -7,6 +7,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import com.teqto.trackme.service.UserDetailsServiceImpl;
+import com.teqto.trackme.constants.SecurityConstants;
 import com.teqto.trackme.filter.JWTAuthenticationFilter;
 import com.teqto.trackme.filter.JWTAuthorizationFilter;
 
@@ -15,8 +16,6 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.context.annotation.Bean;
-
-import static com.teqto.trackme.constants.SecurityConstants.SIGN_UP_URL;
 
 @EnableWebSecurity
 public class WebSecurity extends WebSecurityConfigurerAdapter {
@@ -31,7 +30,10 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().and().csrf().disable().authorizeRequests()
-                .antMatchers(HttpMethod.POST, SIGN_UP_URL).permitAll()
+                .antMatchers(HttpMethod.POST, SecurityConstants.SIGN_UP_URL).permitAll()
+                .antMatchers(HttpMethod.POST, SecurityConstants.APPROVE_OTP_URL).permitAll()
+                .antMatchers(HttpMethod.POST, SecurityConstants.FORGET_PWD_URL).permitAll()
+                .antMatchers(HttpMethod.POST, SecurityConstants.RESENT_OTP_URL).permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .addFilter(new JWTAuthenticationFilter(authenticationManager()))

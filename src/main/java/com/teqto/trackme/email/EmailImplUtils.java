@@ -80,8 +80,8 @@ public class EmailImplUtils implements EmailInterface{
 	@Override
 	public void sendOtpMessage(String phone, String content)  {
 		try {
-		HttpResponse response = Unirest.post("https://www.fast2sms.com/dev/bulk")
-				  .header("authorization", "AUTH_CODE")
+		HttpResponse response = Unirest.post(env.getProperty("sms.send.url"))
+				  .header("authorization", env.getProperty("sms.send.authkey"))
 				  .header("cache-control", "no-cache")
 				  .header("content-type", "application/x-www-form-urlencoded")
 				  .body("sender_id=FSTSMS&language=english&route=qt&numbers="+phone+"&message=42068&variables={#AA#}&variables_values="+content)

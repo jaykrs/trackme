@@ -6,4 +6,7 @@ public class SecurityConstants {
     public static final String TOKEN_PREFIX = "Bearer ";
     public static final String HEADER_STRING = "Authorization";
     public static final String SIGN_UP_URL = "/api/user/create";
+    public static final String APPROVE_OTP_URL = "/api/user/approveotp";
+    public static final String FORGET_PWD_URL = "/api/user/forgetpwd";
+    public static final String RESENT_OTP_URL = "/api/user/resentotp";
 }

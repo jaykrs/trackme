@@ -17,6 +17,8 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import org.springframework.stereotype.Repository;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Repository
 @Table(name="user")
@@ -42,6 +44,7 @@ public class User implements Serializable {
     private String email;
     @Column(nullable=false, length=20)
     private String phone;
+    @JsonIgnore
     @Column(length=20)
     private String password;
     @Column(nullable=false, length=100)

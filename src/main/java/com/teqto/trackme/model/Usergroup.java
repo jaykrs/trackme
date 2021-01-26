@@ -24,6 +24,8 @@ import org.springframework.stereotype.Repository;
 @NamedQueries({ @NamedQuery(name = "Usergroup.findAll", query = "SELECT ug FROM Usergroup ug"),
 	@NamedQuery(name = "Usergroup.findByOwnerid", query = "SELECT ug FROM Usergroup ug WHERE ug.userid = :ownerid and ug.owner = true"),
 	@NamedQuery(name = "Usergroup.findByUserid", query = "SELECT ug FROM Usergroup ug WHERE ug.userid = :userid and ug.approved = true"),
+	@NamedQuery(name = "Usergroup.findByGroupid", query = "SELECT ug FROM Usergroup ug WHERE ug.groupid = :groupid and ug.approved = false"),
+	@NamedQuery(name = "Usergroup.findAllByGroupid", query = "SELECT ug FROM Usergroup ug WHERE ug.groupid = :groupid"),
 	@NamedQuery(name = "Usergroup.findByUserAndGroup", query = "SELECT ug FROM Usergroup ug WHERE ug.groupid = :groupid and ug.userid = :userid and ug.owner = false and ug.approved = false"),
 	@NamedQuery(name = "Usergroup.findByGroupOnwerAndUser", query = "SELECT ug FROM Usergroup ug WHERE ug.groupid = :groupid and ug.userid = :userid and ug.owner = true")
  })

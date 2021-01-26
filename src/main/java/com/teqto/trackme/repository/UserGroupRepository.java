@@ -16,6 +16,8 @@ import com.teqto.trackme.model.Usergroup;
 public interface UserGroupRepository extends JpaRepository<Usergroup, Integer>{
 	Optional<List<Usergroup>> findByOwnerid(@Param("ownerid") Integer ownerid) throws URISyntaxException,NoSuchElementException;
 	Optional<List<Usergroup>> findByUserid(@Param("userid") Integer userid) throws URISyntaxException,NoSuchElementException;
+	Optional<List<Usergroup>> findByGroupid(@Param("groupid") Integer groupid) throws URISyntaxException,NoSuchElementException;
+	Optional<List<Usergroup>> findAllByGroupid(@Param("groupid") Integer groupid) throws URISyntaxException,NoSuchElementException;
 	Optional<List<Usergroup>> findByGroupOnwerAndUser(@Param("groupid") Integer groupid,@Param("userid") Integer userid) throws URISyntaxException,NoSuchElementException;
 	Optional<List<Usergroup>> findByUserAndGroup(@Param("groupid") Integer groupid,@Param("userid") Integer userid) throws URISyntaxException,NoSuchElementException;
 }

@@ -3,6 +3,8 @@ package com.teqto.trackme.restcontroller;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -11,6 +13,7 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -55,6 +58,9 @@ public class UserGroupController {
 	private UserGroupRepository userGroupRepository;
 	@Autowired
 	private GroupRepository groupRepository;
+	
+	@Autowired
+	private UsersRepository usersRepository;
 	/**
 	 * @param id
 	 * @return
@@ -67,9 +73,34 @@ public class UserGroupController {
 				.orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
 	}
 
+	@GetMapping("/getgroupbyuserid/{userid}")
+	ResponseEntity<?> getGroupByUserId(@PathVariable Integer userid)
+			throws URISyntaxException, NoSuchElementException {
+		Optional<List<Usergroup>> ug = userGroupRepository.findByUserid(userid);
+		List<Integer> groupids = ug.get().stream().map(Usergroup::getGroupid).collect(Collectors.toList());
+		Optional<List<Group>> groups = Optional.ofNullable((List<Group>)groupRepository.findByIdIn(groupids));
+		return groups.map(response -> ResponseEntity.ok().body(response))
+				.orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+	}
+	
+	public static Iterable<Integer> toIterable(int[] ints) {
+	    return IntStream.of(ints).boxed().collect(Collectors.toList());
+	}
+	
+	@GetMapping("/getuserbygroupid/{groupid}")
+	ResponseEntity<?> getUserByGroupId(@PathVariable Integer groupid)
+			throws URISyntaxException, NoSuchElementException {
+		Optional<List<Usergroup>> ug = userGroupRepository.findAllByGroupid(groupid);
+		List<Integer> userids = ug.get().stream().map(Usergroup::getUserid).collect(Collectors.toList());
+		Optional<List<User>> users = Optional.ofNullable(usersRepository.findByIdIn(userids));
+		return users.map(response -> ResponseEntity.ok().body(response))
+				.orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+	}
+	
 	@GetMapping("/getUserGroupPendingApproval/{ownerid}")
 	ResponseEntity<?> getUserGroupByOwnerIdPendingApproval(@PathVariable Integer ownerid) throws URISyntaxException,NoSuchElementException{
-		Optional<List<Usergroup>> ug = userGroupRepository.findByOwnerid(ownerid);
+		Group g = groupRepository.findByOwnerid(ownerid).get().get(0);
+		Optional<List<Usergroup>> ug = userGroupRepository.findByGroupid(g.getId());
 		log.info("found userGroup with id" + ownerid);
 		return ug.map(response -> ResponseEntity.ok().body(response))
 				.orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));

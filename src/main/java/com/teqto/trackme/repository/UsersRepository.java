@@ -1,5 +1,6 @@
 package com.teqto.trackme.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -7,6 +8,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.teqto.trackme.model.Group;
 import com.teqto.trackme.model.User;
 
 /**
@@ -17,6 +19,7 @@ public interface UsersRepository extends JpaRepository<User, Integer>{
 	User findByEmail(String emailId);
 	User findByPhone(String phone);
 	Optional<User> findByDeviceid(String deviceid);
+	List<User> findByIdIn(List<Integer> userids);
 	Optional<User> findByUnverifiedDeviceid(String deviceid);
 	User validatePwd(@Param("phone") String emailId,@Param("password") String password);
 	@Transactional

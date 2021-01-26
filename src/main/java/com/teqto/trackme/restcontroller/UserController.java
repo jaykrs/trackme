@@ -65,10 +65,20 @@ public class UserController {
 				.orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
 	}
 
-	@RequestMapping(value = "/getbydeviceid", method = RequestMethod.POST)
-	ResponseEntity<?> getUsersByDeviceId(@Valid @RequestBody Map<String, String> json,
+	@RequestMapping(value = "/getactivebydeviceid", method = RequestMethod.POST)
+	ResponseEntity<?> getActiveUsersByDeviceId(@Valid @RequestBody Map<String, String> json,
 			HttpServletRequest request) {
 		Optional<User> users = usersRepository.findByDeviceid(json.get(ServiceConstants.DEVICETOKEN));
+		log.info("found user with phone" + users.get().getPhone());
+		users.get().setPassword("***");
+		return users.map(response -> ResponseEntity.ok().body(response))
+				.orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+	}
+	
+	@RequestMapping(value = "/getuserbydeviceid", method = RequestMethod.POST)
+	ResponseEntity<?> getUserByDeviceId(@Valid @RequestBody Map<String, String> json,
+			HttpServletRequest request) {
+		Optional<User> users = usersRepository.findByUnverifiedDeviceid(json.get(ServiceConstants.DEVICETOKEN));
 		log.info("found user with phone" + users.get().getPhone());
 		users.get().setPassword("***");
 		return users.map(response -> ResponseEntity.ok().body(response))

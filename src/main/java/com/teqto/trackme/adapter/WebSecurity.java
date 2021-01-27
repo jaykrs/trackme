@@ -34,6 +34,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, SecurityConstants.APPROVE_OTP_URL).permitAll()
                 .antMatchers(HttpMethod.POST, SecurityConstants.FORGET_PWD_URL).permitAll()
                 .antMatchers(HttpMethod.POST, SecurityConstants.RESENT_OTP_URL).permitAll()
+                .antMatchers(HttpMethod.GET, SecurityConstants.PAGE_PUBLIC_URL).permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .addFilter(new JWTAuthenticationFilter(authenticationManager()))

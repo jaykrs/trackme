@@ -18,6 +18,7 @@ import javax.persistence.Table;
 import org.springframework.stereotype.Repository;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
 @Repository
@@ -44,7 +45,7 @@ public class User implements Serializable {
     private String email;
     @Column(nullable=false, length=20)
     private String phone;
-    @JsonIgnore
+    
     @Column(length=20)
     private String password;
     @Column(nullable=false, length=100)
@@ -137,6 +138,7 @@ public class User implements Serializable {
      *
      * @return the current value of password
      */
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     public String getPassword() {
         return password;
     }

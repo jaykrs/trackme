@@ -9,4 +9,5 @@ public class SecurityConstants {
     public static final String APPROVE_OTP_URL = "/api/user/approveotp";
     public static final String FORGET_PWD_URL = "/api/user/forgetpwd";
     public static final String RESENT_OTP_URL = "/api/user/resentotp";
+    public static final String PAGE_PUBLIC_URL = "/api/page/public/get/{\\\\d+}";
 }

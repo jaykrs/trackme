@@ -135,6 +135,9 @@ public class UserGroupController {
 		Usergroup result = null;
 		log.info("Request to create UserGroup : {}", ug);
 		if (ug.getGroupid() > 0 && ug.getUserid() > 0 && !userGroupRepository.findByGroupOnwerAndUser(ug.getGroupid(), ug.getUserid()).isPresent()) {
+			User user = usersRepository.findById(ug.getUserid()).get();
+			ug.setUsername(user.getName());
+			ug.setAvatar(user.getAvatar());
 			ug.setCreatedby(ug.getUserid());
 			ug.setCreatedon(LocalDate.now());
 			ug.setOwner(Boolean.FALSE);

@@ -53,6 +53,10 @@ public class Usergroup implements Serializable {
     private int approvedby;
     @Column(length=1)
     private boolean owner;
+    @Column(length=100)
+    private String username;
+    @Column(length=200)
+    private String avatar;
 
     /** Default constructor. */
     public Usergroup() {
@@ -267,6 +271,34 @@ public class Usergroup implements Serializable {
 	 */
 	public void setOwner(boolean owner) {
 		this.owner = owner;
+	}
+
+	/**
+	 * @return the username
+	 */
+	public String getUsername() {
+		return username;
+	}
+
+	/**
+	 * @param username the username to set
+	 */
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	/**
+	 * @return the avatar
+	 */
+	public String getAvatar() {
+		return avatar;
+	}
+
+	/**
+	 * @param avatar the avatar to set
+	 */
+	public void setAvatar(String avatar) {
+		this.avatar = avatar;
 	}
 
 	public Usergroup(int userid, int groupid, LocalDate createdon, int createdby) {
